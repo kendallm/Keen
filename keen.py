@@ -23,10 +23,8 @@ class Keen:
 
     def eye(self, link, element_name="add-to-cart"):
         self.browser.get(link)
-        print(link)
         try:
             notify = not self._check_if_found_before(link)
-            print(self.browser.page_source)
             add_to_cart_element = WebDriverWait(self.browser, 5).until(
                 EC.presence_of_element_located((By.CLASS_NAME, element_name))
             )
