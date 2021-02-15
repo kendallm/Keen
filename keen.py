@@ -14,15 +14,19 @@ from twilio.rest import Client
 
 class Keen:
     def __init__(self):
+        user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
         chrome_options = Options()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument(f"--user-agent={user_agent}")
         self.browser = webdriver.Chrome(options=chrome_options)
         self.to_number = os.environ["TWILIO_TO_NUMBER"]
 
     def eye(self, link, element_name="add-to-cart"):
         self.browser.get(link)
+        print(link)
         try:
             notify = not self._check_if_found_before(link)
+            print(self.browser.page_source)
             add_to_cart_element = WebDriverWait(self.browser, 5).until(
                 EC.presence_of_element_located((By.CLASS_NAME, element_name))
             )
