@@ -24,14 +24,16 @@ class Keen:
         try:
             notify = not self._check_if_found_before(link)
             add_to_cart_element = WebDriverWait(self.browser, 5).until(
-                EC.presence_of_element_located((By.NAME, element_name))
+                EC.presence_of_element_located((By.CLASS_NAME, element_name))
             )
-            if notify:
+            if notify and add_to_cart_element.is_displayed():
                 self._mark_link_found(link)
                 message = f"Link: {link}\n Available for purchase"
                 self.notify(self.to_number, message)
-            print(f"Found: {link}")
+                print(f"Found: {link}\n")
+            self.cleanup()
         except TimeoutException:
+            self.cleanup()
             pass
 
     def _check_if_found_before(self, link):
@@ -47,7 +49,7 @@ class Keen:
 
     def _mark_link_found(self, link):
         with open(".found", "w+") as f:
-            f.writelines([link])
+            f.writelines([f"{link}\n"])
 
     def __enter__(self):
         return Keen()
